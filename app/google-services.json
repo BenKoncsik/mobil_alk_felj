@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "908534134805",
-    "project_id": "cheat-f4682",
-    "storage_bucket": "cheat-f4682.appspot.com"
+    "project_number": "589931030087",
+    "project_id": "chat-2882e",
+    "storage_bucket": "chat-2882e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:908534134805:android:a1b412fd40f662cfd6761c",
+        "mobilesdk_app_id": "1:589931030087:android:2973319f71a8ac829eb362",
         "android_client_info": {
           "package_name": "hu.koncsik"
         }
       },
       "oauth_client": [
         {
-          "client_id": "908534134805-r897b9qnim1p6c81eg9u7kvh5j7jdbu3.apps.googleusercontent.com",
+          "client_id": "589931030087-kkjfqmspfu03gh26ubnldl37n9cecp01.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "hu.koncsik",
-            "certificate_hash": "09f525b685e37eec3ca0686025ae9514f06c6f14"
+            "certificate_hash": "fa4161b4770d0328fde1bca582766a6ca3ec5da0"
           }
         },
         {
-          "client_id": "908534134805-9d3ds0ujklhu6r48gufjr52a5251lceh.apps.googleusercontent.com",
+          "client_id": "589931030087-4ainug8dc06heltl9cqv0n729pjen8jg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBaZ1kQK23oHqLf3d5vMrvn81jTzf4g2H8"
+          "current_key": "AIzaSyCadaULFEyraZhGPf0tGsMs3Gwbrx_-ZVY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "908534134805-9d3ds0ujklhu6r48gufjr52a5251lceh.apps.googleusercontent.com",
+              "client_id": "589931030087-4ainug8dc06heltl9cqv0n729pjen8jg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

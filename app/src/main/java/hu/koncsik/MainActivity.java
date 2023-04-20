@@ -78,34 +78,19 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
+            Log.i(LOG_TAG, "login with google");
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
                 Log.d(LOG_TAG, "firebaseAuthWithGoogle:" + account.getId());
+                startCheat();
               firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Log.w(LOG_TAG, "Google sign in failed", e);
             }
         }
     }
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                String userEmail = user.getEmail();
-                                String userName = user.getDisplayName();
-                                mItems.add(new UserItem(userName, userEmail, LocalDateTime.now()));
-                            }
-                        }
-                    }
-                });
-    }
+
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)

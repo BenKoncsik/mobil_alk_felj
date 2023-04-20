@@ -80,7 +80,7 @@ public class Home extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
         mItems = mFirestore.collection("users");
-        queryData();
+//        queryData();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_POWER_CONNECTED);
@@ -100,11 +100,11 @@ public class Home extends AppCompatActivity {
             switch (intentAction) {
                 case Intent.ACTION_POWER_CONNECTED:
                     itemLimit = 10;
-                    queryData();
+                  //  queryData();
                     break;
                 case Intent.ACTION_POWER_DISCONNECTED:
                     itemLimit = 5;
-                    queryData();
+                    //queryData();
                     break;
             }
         }
@@ -112,7 +112,7 @@ public class Home extends AppCompatActivity {
 
     private void queryData() {
         mItemsData.clear();
-        mItems.orderBy("name").limit(itemLimit).get().addOnSuccessListener(queryDocumentSnapshots -> {
+        mItems.orderBy("lastActive").limit(itemLimit).get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 UserItem item = document.toObject(UserItem.class);
                 mItemsData.add(item);
