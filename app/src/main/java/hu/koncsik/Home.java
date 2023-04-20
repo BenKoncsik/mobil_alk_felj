@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +47,6 @@ public class Home extends AppCompatActivity {
 
     private FrameLayout redCircle;
     private TextView countTextView;
-    private int cartItems = 0;
     private int gridNumber = 1;
     private Integer itemLimit = 5;
 
@@ -60,7 +61,6 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         mAuth = FirebaseAuth.getInstance();
-        // mAuth.signOut();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         if(user != null) {
@@ -80,7 +80,7 @@ public class Home extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
         mItems = mFirestore.collection("users");
-//        queryData();
+        queryData();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_POWER_CONNECTED);
@@ -100,11 +100,11 @@ public class Home extends AppCompatActivity {
             switch (intentAction) {
                 case Intent.ACTION_POWER_CONNECTED:
                     itemLimit = 10;
-                  //  queryData();
+                    queryData();
                     break;
                 case Intent.ACTION_POWER_DISCONNECTED:
                     itemLimit = 5;
-                    //queryData();
+                    queryData();
                     break;
             }
         }
@@ -119,22 +119,17 @@ public class Home extends AppCompatActivity {
             }
 
             if (mItemsData.size() == 0) {
-                initializeData();
                 queryData();
             }
             mAdapter.notifyDataSetChanged();
         });
     }
 
-    private void initializeData() {
-
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        /*getMenuInflater().inflate(R.menu.shop_list_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem menuItem = menu.findItem(R.id.search_bar);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -149,27 +144,26 @@ public class Home extends AppCompatActivity {
                 mAdapter.getFilter().filter(s);
                 return false;
             }
-        });*/
+        });
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-          /*  case R.id.log_out_button:
+            case R.id.logout:
                 Log.d(LOG_TAG, "Logout clicked!");
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 return true;
-            case R.id.settings_button:
-                Log.d(LOG_TAG, "Setting clicked!");
-                FirebaseAuth.getInstance().signOut();
-                finish();
+            case R.id.new_group:
+                Log.d(LOG_TAG, "new Group!");
+
                 return true;
-            case R.id.cart:
-                Log.d(LOG_TAG, "Cart clicked!");
-                return true;
-            case R.id.view_selector:
+            case R.id.refresh:
+                Log.d(LOG_TAG, "Refresh user List!");
+                queryData();
+           /* case R.id.view_selector:
                 if (viewRow) {
                     changeSpanCount(item, R.drawable.ic_view_grid, 1);
                 } else {
@@ -205,17 +199,6 @@ public class Home extends AppCompatActivity {
         });
         return super.onPrepareOptionsMenu(menu);*/
         return false;
-    }
-
-    public void updateAlertIcon() {
-        cartItems = (cartItems + 1);
-        if (0 < cartItems) {
-            countTextView.setText(String.valueOf(cartItems));
-        } else {
-            countTextView.setText("");
-        }
-
-        redCircle.setVisibility((cartItems > 0) ? VISIBLE : GONE);
     }
 
     @Override

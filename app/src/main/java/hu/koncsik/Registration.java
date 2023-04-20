@@ -26,6 +26,7 @@ import java.util.Date;
 
 import hu.koncsik.adapter.UserItem;
 import hu.koncsik.databinding.ActivityRegistrationBinding;
+import hu.koncsik.extension.CustomLocalDateTime;
 
 public class Registration extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -86,7 +87,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     Log.d(LOG_TAG, "User created successfully");
-                        mItems.add(new UserItem(userName, email, LocalDateTime.now()));
+                        mItems.add(new UserItem(userName, email, new Date()));
                     startCheat();
                 } else {
                     Log.d(LOG_TAG, "User was't created successfully:", task.getException());

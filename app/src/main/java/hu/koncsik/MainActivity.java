@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,15 +28,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import hu.koncsik.adapter.UserItem;
 import hu.koncsik.databinding.ActivityMainBinding;
+import hu.koncsik.extension.CustomLocalDateTime;
+import hu.koncsik.model.User;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d(LOG_TAG, "firebaseAuthWithGoogle:" + account.getId());
-                startCheat();
               firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Log.w(LOG_TAG, "Google sign in failed", e);
@@ -94,15 +100,37 @@ public class MainActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(LOG_TAG, "signInWithCredential:success");
-                            startCheat();
-                        } else {
-                            Log.w(LOG_TAG, "signInWithCredential:failure", task.getException());
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(LOG_TAG, "signInWithCredential:success");
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        mItems.whereEqualTo("email", user.getEmail()).limit(1).get().addOnSuccessListener(queryDocumentSnapshots -> {
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                for (QueryDocumentSnapshot userItem : queryDocumentSnapshots) {
+
+                                    userItem.getReference().update("lastActive", new Date())
+                                            .addOnSuccessListener(aVoid -> {
+                                                Log.d(LOG_TAG, "Not exist success add");
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.d(LOG_TAG, "Not exists fail add");
+                                            });
+                                    break;
+                                }
+                            }else{
+                                UserItem newUser = new UserItem(user.getDisplayName(), user.getEmail(), new Date());
+                                mItems.add(newUser)
+                                        .addOnSuccessListener(documentReference -> {
+                                            Log.d(LOG_TAG, "Exists success add");
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Log.d(LOG_TAG, "Exists fail add");
+                                        });
+                            }
+                        });
+                        startCheat();
+                    } else {
+                        Log.w(LOG_TAG, "signInWithCredential:failure", task.getException());
                     }
                 });
     }
@@ -118,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.logout) {
             return true;
         }
 

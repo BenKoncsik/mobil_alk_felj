@@ -2,8 +2,28 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="hu.koncsik.MainActivity">
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
+    <item android:id="@+id/search_bar"
+        android:title="@string/search"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <item android:id="@+id/new_group"
+        android:title="@string/new_group"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_group"
+        app:showAsAction="ifRoom"
+         />
+    <item android:id="@+id/refresh"
+        android:title="@string/refresh"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="ifRoom"
+        />
+
+    <item android:id="@+id/logout"
+          android:title="@string/logout"
           android:orderInCategory="100"
           app:showAsAction="never"/>
 </menu>
