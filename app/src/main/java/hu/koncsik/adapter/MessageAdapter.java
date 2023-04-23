@@ -166,8 +166,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             messageText.setText(message.getText());
             new GetEmailToName(message.getSender(), senderName, context).execute();
             senderTime.setText(new SimpleDateFormat("yyyy MM dd HH:mm:ss").format(message.getSend()));
-            if((messageText.getText() == null || messageText.getText().equals("")) && (message.getImageUrl() != null || message.getImageUrl().equals(""))) messageText.setVisibility(View.GONE);
-
+//            if((messageText.getText() == null || messageText.getText().equals("")) && (message.getImageUrl() != null || message.getImageUrl().equals(""))) messageText.setVisibility(View.GONE);
             if (message.getImageUrl() != null ) {
                 messageImage.setVisibility(View.VISIBLE);
                 loadImageFromFirebase(message.getImageUrl(), messageImage);
@@ -207,7 +206,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
              messageText.setText(message.getText());
             new GetEmailToName(message.getSender(), receiverName, context).execute();
             receiverTime.setText(new SimpleDateFormat("yyyy MM dd HH:mm:ss").format(message.getSend()));
-            if((messageText.getText() == null || messageText.getText().equals("")) && (message.getImageUrl() != null || message.getImageUrl().equals(""))) messageText.setVisibility(View.GONE);
+//            if((messageText.getText() == null || messageText.getText().equals("")) && (message.getImageUrl() != null || message.getImageUrl().equals(""))) messageText.setVisibility(View.GONE);
             if (message.getImageUrl() != null ) {
                 messageImage.setVisibility(View.VISIBLE);
                 loadImageFromFirebase(message.getImageUrl(), messageImage);

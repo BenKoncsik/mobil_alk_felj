@@ -1,5 +1,7 @@
 package hu.koncsik;
 
+import static hu.koncsik.HomeFragment.gridNumber;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,22 +46,16 @@ public class GroupListFragment extends Fragment {
 
     private static final String LOG_TAG = GroupListFragment.class.getName();
     private FirebaseUser user;
-    private FirebaseAuth mAuth;
 
     private RecyclerView mRecyclerView;
     private ArrayList<ChatItem> mItemsData;
     private GroupItemAdapter mAdapter;
 
-
+    private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private CollectionReference mItems;
 
-    private FrameLayout redCircle;
-    private TextView countTextView;
-    private int gridNumber = 1;
     private Integer itemLimit = 5;
-
-    private SharedPreferences preferences;
 
     private boolean viewRow = true;
     public static String userFirebaseId;
@@ -81,6 +77,12 @@ public class GroupListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {}
+    }
+    public void changeLayout(){
+        GridLayoutManager layoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            layoutManager.setSpanCount(gridNumber);
+        }
     }
 
     @Override
@@ -169,13 +171,11 @@ public class GroupListFragment extends Fragment {
             case R.id.refresh:
                 Log.d(LOG_TAG, "Refresh group List!");
                 queryData();
-           /* case R.id.view_selector:
-                if (viewRow) {
-                    changeSpanCount(item, R.drawable.ic_view_grid, 1);
-                } else {
-                    changeSpanCount(item, R.drawable.ic_view_row, 2);
-                }
-                return true;*/
+            case R.id.grid:
+                if(gridNumber == 1) gridNumber = 2;
+                else gridNumber = 1;
+                changeLayout();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

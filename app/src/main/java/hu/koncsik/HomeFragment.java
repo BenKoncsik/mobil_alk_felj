@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -36,7 +37,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import hu.koncsik.adapter.UserItem;
 import hu.koncsik.adapter.UserItemAdapter;
@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
 
     private FrameLayout redCircle;
     private TextView countTextView;
-    private int gridNumber = 1;
+    public static int gridNumber = 1;
     private Integer itemLimit = 5;
 
     private SharedPreferences preferences;
@@ -98,8 +98,6 @@ public class HomeFragment extends Fragment {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_POWER_CONNECTED);
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-        //getContext().registerReceiver(powerReceiver, filter);
-
         attachUserListener();
         return view;
     }
@@ -164,7 +162,25 @@ public class HomeFragment extends Fragment {
         });
 
     }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d(LOG_TAG, "Change orientation");
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            gridNumber = 2;
+        } else {
+            gridNumber = 1;
+        }
+        changeLayout();
 
+    }
+
+    public void changeLayout(){
+        GridLayoutManager layoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            layoutManager.setSpanCount(gridNumber);
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -180,48 +196,20 @@ public class HomeFragment extends Fragment {
             case R.id.new_group:
                 Log.d(LOG_TAG, "new Group!");
                 startActivity(new Intent(getContext(), GroupsChat.class));
-
+                return true;
+            case R.id.grid:
+                if(gridNumber == 1) gridNumber = 2;
+                else gridNumber = 1;
+                changeLayout();
                 return true;
             case R.id.refresh:
                 Log.d(LOG_TAG, "Refresh user List!");
                 queryData();
-           /* case R.id.view_selector:
-                if (viewRow) {
-                    changeSpanCount(item, R.drawable.ic_view_grid, 1);
-                } else {
-                    changeSpanCount(item, R.drawable.ic_view_row, 2);
-                }
-                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-
-    private void changeSpanCount(MenuItem item, int drawableId, int spanCount) {
-        viewRow = !viewRow;
-        item.setIcon(drawableId);
-        GridLayoutManager layoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
-        layoutManager.setSpanCount(spanCount);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        /*final MenuItem alertMenuItem = menu.findItem(R.id.cart);
-        FrameLayout rootView = (FrameLayout) alertMenuItem.getActionView();
-
-        redCircle = (FrameLayout) rootView.findViewById(R.id.view_alert_red_circle);
-        countTextView = (TextView) rootView.findViewById(R.id.view_alert_count_textview);
-
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onOptionsItemSelected(alertMenuItem);
-            }
-        });
-        return super.onPrepareOptionsMenu(menu);*/
-
-    }
 
     private void updateStatus(boolean status) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

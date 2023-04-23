@@ -52,12 +52,14 @@
             android:exported="false" />
         <activity
             android:name=".GroupsChat"
+            android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".Chat"
             android:exported="false" />
         <activity
             android:name=".HomeFragment"
+            android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity android:name=".HomeActivity"
             android:exported="false" />

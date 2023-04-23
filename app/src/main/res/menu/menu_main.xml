@@ -22,6 +22,12 @@
         android:icon="@drawable/ic_refresh"
         app:showAsAction="ifRoom"
         />
+    <item android:id="@+id/grid"
+        android:title="@string/change_grid"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_grid"
+        app:showAsAction="ifRoom"
+        />
 
     <item android:id="@+id/logout"
           android:title="@string/logout"

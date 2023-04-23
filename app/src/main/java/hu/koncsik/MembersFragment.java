@@ -1,5 +1,7 @@
 package hu.koncsik;
 
+import static hu.koncsik.HomeFragment.gridNumber;
+
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -59,7 +61,6 @@ public class MembersFragment extends Fragment {
 
     private FrameLayout redCircle;
     private TextView countTextView;
-    private int gridNumber = 1;
     private Integer itemLimit = 5;
 
     private SharedPreferences preferences;
@@ -137,6 +138,12 @@ public class MembersFragment extends Fragment {
         return view;
     }
 
+    public void changeLayout(){
+        GridLayoutManager layoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            layoutManager.setSpanCount(gridNumber);
+        }
+    }
     private void queryData() {
         mItemsData.clear();
         mItems.orderBy("lastActive", Query.Direction.DESCENDING).limit(itemLimit).get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -176,8 +183,18 @@ public class MembersFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
+            switch (item.getItemId()) {
+                case R.id.refresh:
+                    Log.d(LOG_TAG, "Refresh group List!");
+                    queryData();
+                case R.id.grid:
+                    if(gridNumber == 1) gridNumber = 2;
+                    else gridNumber = 1;
+                    changeLayout();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
     }
 
 

@@ -3,6 +3,7 @@ package hu.koncsik;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -50,17 +51,7 @@ public class GroupsChat extends AppCompatActivity implements GroupsChatCallback 
     private CollectionReference mUserItems;
     private CollectionReference mMessageItems;
 
-    private FrameLayout redCircle;
-    private TextView countTextView;
-    private int gridNumber = 1;
-    private Integer itemLimit = 5;
-
-    private SharedPreferences preferences;
-
     private boolean viewRow = true;
-    public static String userFirebaseId;
-    private ListenerRegistration userListenerRegistration;
-
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private TabAdapter tabAdapter;
@@ -114,9 +105,6 @@ public class GroupsChat extends AppCompatActivity implements GroupsChatCallback 
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> updateTabTitle(tab, position));
         tabLayoutMediator.attach();
 
-
-
-
     }
 
     private void updateTabTitle(TabLayout.Tab tab, int position) {
@@ -130,6 +118,7 @@ public class GroupsChat extends AppCompatActivity implements GroupsChatCallback 
                 break;
         }
     }
+
 
     @Override
     public MutableLiveData<ArrayList<String>> getSelectedEmailsLiveData() {

@@ -37,6 +37,7 @@
     <string name="selected_image">Selected image</string>
     <string name="send">Send</string>
     <string name="delete_chat">Delete chat</string>
+    <string name="change_grid">Change Grid</string>
 
 
 </resources>
