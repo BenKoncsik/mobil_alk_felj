@@ -6,3 +6,4 @@
 - Készítettem egy kis képernnyő videót az alkalmazás bemutatásához https://youtu.be/QKn3h6q5Hfw
 - meg_ne_merj_nyitni mappába a fordított apk
 - Privát információt ne küldj el az alklmazáson keresztül semmi tikosítás nincs benne.
+- https://github.com/Koncsik-cyber/mobil_alk_felj
