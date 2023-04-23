@@ -6,7 +6,38 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_item">
+
+        <CheckBox
+            android:id="@+id/active_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:clickable="false"
+            android:focusable="false" />
+
+
+        <TextView
+            android:id="@+id/active_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/active_indicator"
+            android:layout_alignRight="@id/active_indicator"
+            android:text="@string/active_user"
+            android:textColor="?android:textColorSecondary" />
+
+        <CheckBox
+            android:id="@+id/group_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:clickable="false"
+            android:focusable="false" />
 
         <ImageView
             android:id="@+id/itemImage"

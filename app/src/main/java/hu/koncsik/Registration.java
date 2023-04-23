@@ -2,31 +2,27 @@ package hu.koncsik;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import hu.koncsik.adapter.UserItem;
-import hu.koncsik.databinding.ActivityRegistrationBinding;
-import hu.koncsik.extension.CustomLocalDateTime;
 
 public class Registration extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -76,24 +72,34 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
         String email = userEmailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String passwordConfirm = passwordConfirmEditText.getText().toString();
-
         if (!password.equals(passwordConfirm)) {
             Log.e(LOG_TAG, "Not equals password");
+            Toast.makeText(this, "Not equals password",  Toast.LENGTH_LONG).show();
             return;
         }
         Log.i(LOG_TAG, "Registration:  " + userName + ", email: " + email);
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-                    Log.d(LOG_TAG, "User created successfully");
-                        mItems.add(new UserItem(userName, email, new Date()));
-                    startCheat();
-                } else {
-                    Log.d(LOG_TAG, "User was't created successfully:", task.getException());
-                    Toast.makeText(Registration.this, "User was't created successfully: Account already exist!", Toast.LENGTH_LONG).show();
+
+                    if(task.isSuccessful()) {
+                        Log.d(LOG_TAG, "User created successfully");
+                        String emailLowerCase = email.toLowerCase();
+                        Log.d(LOG_TAG, "Emial lower case: " + emailLowerCase);
+                        mItems.add(new UserItem(userName, emailLowerCase, new Date()));
+                        startCheat();
+                    } else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                        Log.d(LOG_TAG, "User wasn't created successfully:", task.getException());
+                        Toast.makeText(Registration.this, "Password should be at least 6 characters!", Toast.LENGTH_LONG).show();
+                    } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                        Log.d(LOG_TAG, "User wasn't created successfully:", task.getException());
+                        Toast.makeText(Registration.this, "Account already exist!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Log.d(LOG_TAG, "User wasn't created successfully: ", task.getException());
+                        Toast.makeText(Registration.this, "Unknown error", Toast.LENGTH_LONG).show();
+                    }
+
                 }
-            }
         });
 
     }
@@ -103,7 +109,7 @@ public class Registration extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void startCheat() {
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("SECRET_KEY", SECRET_KEY);
         startActivity(intent);
     }

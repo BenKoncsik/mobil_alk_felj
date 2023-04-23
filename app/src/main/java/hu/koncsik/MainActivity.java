@@ -13,35 +13,26 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
 
 import hu.koncsik.adapter.UserItem;
-import hu.koncsik.databinding.ActivityMainBinding;
-import hu.koncsik.extension.CustomLocalDateTime;
-import hu.koncsik.model.User;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -103,31 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         Log.d(LOG_TAG, "signInWithCredential:success");
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        mItems.whereEqualTo("email", user.getEmail()).limit(1).get().addOnSuccessListener(queryDocumentSnapshots -> {
-                            if (!queryDocumentSnapshots.isEmpty()) {
-                                for (QueryDocumentSnapshot userItem : queryDocumentSnapshots) {
-
-                                    userItem.getReference().update("lastActive", new Date())
-                                            .addOnSuccessListener(aVoid -> {
-                                                Log.d(LOG_TAG, "Not exist success add");
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Log.d(LOG_TAG, "Not exists fail add");
-                                            });
-                                    break;
-                                }
-                            }else{
-                                UserItem newUser = new UserItem(user.getDisplayName(), user.getEmail(), new Date());
-                                mItems.add(newUser)
-                                        .addOnSuccessListener(documentReference -> {
-                                            Log.d(LOG_TAG, "Exists success add");
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Log.d(LOG_TAG, "Exists fail add");
-                                        });
-                            }
-                        });
+                        updateUser();
                         startCheat();
                     } else {
                         Log.w(LOG_TAG, "signInWithCredential:failure", task.getException());
@@ -162,7 +129,10 @@ public class MainActivity extends AppCompatActivity {
     public void login(View view) {
         String email = userNameET.getText().toString();
         String password = passwordET.getText().toString();
-
+    if(email.equals("") || password.equals("")) {
+        Toast.makeText(this, "Not filed email or password input :( ", Toast.LENGTH_LONG).show();
+        return;
+    }
          Log.i(LOG_TAG, "Logged: " + email + ", password: " + password);
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -170,10 +140,39 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Log.d(LOG_TAG, "Login done!");
+                    updateUser();
                     startCheat();
                 } else {
                     Toast.makeText(MainActivity.this, "Invalid email or password!", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+    }
+
+    private void updateUser(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        mItems.whereEqualTo("email", user.getEmail()).limit(1).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            if (!queryDocumentSnapshots.isEmpty()) {
+                for (QueryDocumentSnapshot userItem : queryDocumentSnapshots) {
+
+                    userItem.getReference().update("lastActive", new Date(), "active", true)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d(LOG_TAG, "Not exist success add");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.d(LOG_TAG, "Not exists fail add");
+                            });
+                    break;
+                }
+            }else{
+                UserItem newUser = new UserItem(user.getDisplayName(), user.getEmail(), new Date());
+                mItems.add(newUser)
+                        .addOnSuccessListener(documentReference -> {
+                            Log.d(LOG_TAG, "Exists success add");
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.d(LOG_TAG, "Exists fail add");
+                        });
             }
         });
     }
@@ -187,7 +186,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i(LOG_TAG, "onStart");
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            startCheat();
+        }
     }
 
     @Override
@@ -205,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("userName", userNameET.getText().toString());
         editor.putString("password", passwordET.getText().toString());
@@ -217,17 +218,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(LOG_TAG, "onResume");
+
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.i(LOG_TAG, "onRestart");
+
     }
 
     private void startCheat() {
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("SECRET_KEY", SECRET_KEY);
         startActivity(intent);
     }

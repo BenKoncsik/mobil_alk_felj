@@ -21,10 +21,22 @@
     <string name="item_info_placeholder">q</string>
     <string name="start_message">Start message</string>
     <string name="logout">Logout</string>
-    <string name="search">Search\n</string>
+    <string name="search">Search</string>
     <string name="new_group">New Group</string>
-    <string name="refresh">Refresh\n</string>
+    <string name="refresh">Refresh</string>
     <string name="type_a_message">Type a message</string>
+    <string name="active">Active</string>
+    <string name="active_user">Online user</string>
+    <string name="delete_cheat">Delete Cheat</string>
+    <string name="show_members">Show members</string>
+    <string name="back_button">Return page</string>
+
+    <string name="create_new_group">Create New Group</string>
+    <string name="group_name">Group Name</string>
+    <string name="save_group">Save Group</string>
+    <string name="selected_image">Selected image</string>
+    <string name="send">Send</string>
+    <string name="delete_chat">Delete chat</string>
 
 
 </resources>

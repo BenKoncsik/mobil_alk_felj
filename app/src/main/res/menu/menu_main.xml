@@ -2,6 +2,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="hu.koncsik.MainActivity">
+
     <item android:id="@+id/search_bar"
         android:title="@string/search"
         android:orderInCategory="100"
@@ -12,7 +13,7 @@
     <item android:id="@+id/new_group"
         android:title="@string/new_group"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_group"
+        android:icon="@drawable/ix_group_add"
         app:showAsAction="ifRoom"
          />
     <item android:id="@+id/refresh"

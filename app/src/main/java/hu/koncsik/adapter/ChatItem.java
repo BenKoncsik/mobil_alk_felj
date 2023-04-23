@@ -7,12 +7,27 @@ import java.util.List;
 public class ChatItem implements Serializable{
     private String id;
     private String name;
-    private List<String> members;
+    private ArrayList<String> members;
     private List<Message_1> messages;
     private boolean group;
 
     public ChatItem(){}
+    public ChatItem(String loggedInUserEmail, String otherUserEmail, String id) {
+        this.members = new ArrayList<>();
+        this.members.add(loggedInUserEmail);
+        this.members.add(otherUserEmail);
+        this.messages = new ArrayList<>();
+        this.group = false;
+        this.id = id;
+    }
 
+    public ChatItem(String name, ArrayList<String> members, boolean group,  String id) {
+        this.name = name;
+        this.members = members;
+        this.group = group;
+        this.messages = new ArrayList<>();
+        this.id = id;
+    }
 
     public String getId() {
         return id;
@@ -22,11 +37,11 @@ public class ChatItem implements Serializable{
         this.id = id;
     }
 
-    public List<String> getMembers() {
+    public ArrayList<String> getMembers() {
         return members;
     }
 
-    public void setMembers(List<String> members) {
+    public void setMembers(ArrayList<String> members) {
         this.members = members;
     }
 
@@ -54,13 +69,7 @@ public class ChatItem implements Serializable{
         this.group = group;
     }
 
-    public ChatItem(String loggedInUserEmail, String otherUserEmail) {
-        this.members = new ArrayList<>();
-        this.members.add(loggedInUserEmail);
-        this.members.add(otherUserEmail);
-        this.messages = new ArrayList<>();
-        this.group = false;
-    }
+
 }
 
 

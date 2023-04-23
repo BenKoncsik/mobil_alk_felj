@@ -7,6 +7,7 @@ public class Message_1 implements Serializable {
         private String text;
         private Date send;
         private String sender;
+        private String imageUrl = null;
 
         public Message_1(String text, String sender){
             this.text = text;
@@ -37,4 +38,12 @@ public class Message_1 implements Serializable {
         public void setSender(String sender) {
             this.sender = sender;
         }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

@@ -1,10 +1,36 @@
 
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+
+def getCurrentTimeFormatted() {
+    LocalDate currentDate = LocalDate.now()
+    LocalTime currentTime = LocalTime.now()
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH.mm.ss")
+    return currentDate.format(dateFormatter) + "." + currentTime.format(timeFormatter)
+}
+
+def getNextVersionCode() {
+    File versionCodeFile = new File("versionCodeFile.txt")
+    int versionCode = 1
+
+    if (versionCodeFile.exists()) {
+        versionCode = versionCodeFile.text.toInteger() + 1
+    }
+
+    versionCodeFile.text = "$versionCode"
+    return versionCode
+}
+
+
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
 }
 
 android {
+
     namespace 'hu.koncsik'
     compileSdk 33
 
@@ -12,13 +38,18 @@ android {
         applicationId "hu.koncsik"
         minSdk 28
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode getNextVersionCode()
+        versionName getCurrentTimeFormatted()
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def formattedVersionName = versionName.replaceAll("[^0-9.]", "")
+            outputFileName = "app-debug-${formattedVersionName}.apk"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -54,6 +85,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
+    implementation 'com.google.firebase:firebase-storage:20.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -62,4 +94,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:24.5.0'
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }

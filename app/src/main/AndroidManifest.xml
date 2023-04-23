@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
 
     <application
         android:allowBackup="true"
@@ -11,11 +21,45 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chat"
         tools:targetApi="31">
+        <receiver android:name=".servic.NotificationService$DeleteNotificationReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="hu.koncsik.DELETE_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".servic.NotificationService$NotificationClickReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="hu.koncsik.NOTIFICATION_CLICK" />
+            </intent-filter>
+        </receiver>
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="hu.koncsik.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <activity
+            android:name=".BaseSettingsFragment"
+            android:exported="false" />
+        <activity
+            android:name=".GroupsChat"
+            android:exported="false" />
         <activity
             android:name=".Chat"
             android:exported="false" />
         <activity
-            android:name=".Home"
+            android:name=".HomeFragment"
+            android:exported="false" />
+        <activity android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".Registration"
@@ -33,6 +77,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".servic.StatusService" />
+        <service android:name=".servic.NotificationService" />
     </application>
 
 </manifest>

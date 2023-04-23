@@ -13,9 +13,7 @@ public class UserItem {
     private String email;
     private Date lastActive;
 
-    private List<UserItem> cheat;
-    private List<UserItem> groupCheat;
-
+    private boolean active;
 
     public UserItem() {
     }
@@ -24,16 +22,14 @@ public class UserItem {
         this.name = name;
         this.lastActive = lastActive;
         this.email = email;
-        this.cheat = new LinkedList<>();
-        this.groupCheat = new LinkedList<>();
+        this.active = true;
     }
 
     public UserItem(String name, String email, Date lastActive, List<UserItem> cheat, List<UserItem> groupCheat) {
         this.name = name;
         this.email = email;
         this.lastActive = lastActive;
-        this.cheat = cheat;
-        this.groupCheat = groupCheat;
+        this.active = true;
     }
 
     public String getEmail() {
@@ -60,20 +56,12 @@ public class UserItem {
         this.lastActive = lastActive;
     }
 
-    public List<UserItem> getCheat() {
-        return cheat;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setCheat(List<UserItem> cheat) {
-        this.cheat = cheat;
-    }
-
-    public List<UserItem> getGroupCheat() {
-        return groupCheat;
-    }
-
-    public void setGroupCheat(List<UserItem> groupCheat) {
-        this.groupCheat = groupCheat;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
 

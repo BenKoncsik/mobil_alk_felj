@@ -74,21 +74,10 @@
             android:layout_below="@id/passwordEditText"/>
 
 
-    <Spinner
-            android:id="@+id/phoneSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_margin_side"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="@dimen/default_margin_side"
-            android:layout_below="@id/passwordAgainEditText"/>
-
-
-
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/phoneSpinner"
+            android:layout_below="@id/passwordAgainEditText"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
